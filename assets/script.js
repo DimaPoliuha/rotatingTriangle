@@ -6,6 +6,9 @@ var ctx = canvas.getContext( '2d' );
 canvas.width = 500;
 canvas.height = 500;
 
+var triangleBaseSide = 70;
+var triangleSide = 100;
+
 var documentCoordinates = {
     centerDocumentPositionX: ( window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth ) / 2,
     centerDocumentPositionY: ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ) / 2,
@@ -26,36 +29,25 @@ window.onload = function () {
 }
 
 function rotateTriangle( event ){
-
-    //rotatingAngle = rotatingAngle * ( Math.PI / 180 );//переводим градусы в радианы
-    ctx.save();//сохраняем поворот канваса
-    ctx.translate( canvasCoordinates.canvasCenterX, canvasCoordinates.canvasCenterY );//смещаем оси координат канваса
-    
-            // находим текущий угол вращения (нулевой угол = горизонтально вправо)
-            var offset = {
-                dx: event.pageX - documentCoordinates.centerDocumentPositionX,
-                dy: event.pageY - documentCoordinates.centerDocumentPositionY
-            };
-            var rotatingAngle = Math.atan(offset.dy / offset.dx) + Math.PI / 2;
-            if (offset.dx < 0) rotatingAngle += Math.PI;
-    
-    
-    
-    ctx.rotate( rotatingAngle );//вращаем оси
-
-
-
-    ctx.translate( -canvasCoordinates.canvasCenterX, -canvasCoordinates.canvasCenterY );//возвращаем оси в обычное положение
-    
-    drawTriangle( 70, 100 );
-
-    ctx.restore();//восстанавливаем настройки канваса
+    ctx.save();
+    ctx.translate( canvasCoordinates.canvasCenterX, canvasCoordinates.canvasCenterY );
+    var triandleTranslation = {
+        dx: event.pageX - documentCoordinates.centerDocumentPositionX,
+        dy: event.pageY - documentCoordinates.centerDocumentPositionY
+    };
+    var rotatingAngle = Math.atan( triandleTranslation.dy / triandleTranslation.dx ) + Math.PI / 2;
+    if ( triandleTranslation.dx < 0 ){
+        rotatingAngle += Math.PI;
+    }
+    ctx.rotate( rotatingAngle );
+    ctx.translate( -canvasCoordinates.canvasCenterX, -canvasCoordinates.canvasCenterY );
+    drawTriangle( triangleBaseSide, triangleSide );
+    ctx.restore();
 };
 
 function drawTriangle( baseSide, side ){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect( 0, 0, canvas.width, canvas.height );
     var median = Math.sqrt( Math.pow( side, 2 ) - Math.pow( baseSide, 2 ) / 4 );
-
     var triangleCoordinates = {
         trianglePointTopX: canvasCoordinates.canvasCenterX,
         trianglePointTopY: canvasCoordinates.canvasCenterY - median * 2 / 3,
@@ -63,7 +55,6 @@ function drawTriangle( baseSide, side ){
         trianglePointBottomRightX: canvasCoordinates.canvasCenterX + baseSide / 2,
         trianglePointBottomY: canvasCoordinates.canvasCenterY + median / 3
     };
-
     ctx.beginPath();
     ctx.moveTo( triangleCoordinates.trianglePointTopX, triangleCoordinates.trianglePointTopY );
     ctx.lineTo( triangleCoordinates.trianglePointBottomLeftX, triangleCoordinates.trianglePointBottomY );
