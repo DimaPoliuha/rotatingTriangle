@@ -35,24 +35,27 @@ function rotateTriangle( event ){
         dx: event.pageX - documentCoordinates.centerDocumentPositionX,
         dy: event.pageY - documentCoordinates.centerDocumentPositionY
     };
+    // arctg(y/x)  - angle of rotation (+ PI / 2) - rotate our triangle for correct starting position;
     var rotatingAngle = Math.atan( triandleTranslation.dy / triandleTranslation.dx ) + Math.PI / 2;
+    // quarter check
     if ( triandleTranslation.dx < 0 ){
         rotatingAngle += Math.PI;
     }
     ctx.rotate( rotatingAngle );
     ctx.translate( -canvasCoordinates.canvasCenterX, -canvasCoordinates.canvasCenterY );
-    drawTriangle( triangleBaseSide, triangleSide );
+    drawTriangle();
     ctx.restore();
 };
 
-function drawTriangle( baseSide, side ){
+function drawTriangle(){
     ctx.clearRect( 0, 0, canvas.width, canvas.height );
-    var median = Math.sqrt( Math.pow( side, 2 ) - Math.pow( baseSide, 2 ) / 4 );
+    // intersection of medians is the center of mass of triangle
+    var median = Math.sqrt( Math.pow( triangleSide, 2 ) - Math.pow( triangleBaseSide, 2 ) / 4 );
     var triangleCoordinates = {
         trianglePointTopX: canvasCoordinates.canvasCenterX,
         trianglePointTopY: canvasCoordinates.canvasCenterY - median * 2 / 3,
-        trianglePointBottomLeftX: canvasCoordinates.canvasCenterX - baseSide / 2,
-        trianglePointBottomRightX: canvasCoordinates.canvasCenterX + baseSide / 2,
+        trianglePointBottomLeftX: canvasCoordinates.canvasCenterX - triangleBaseSide / 2,
+        trianglePointBottomRightX: canvasCoordinates.canvasCenterX + triangleBaseSide / 2,
         trianglePointBottomY: canvasCoordinates.canvasCenterY + median / 3
     };
     ctx.beginPath();
