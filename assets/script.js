@@ -8,6 +8,7 @@ canvas.height = 500;
 
 var triangleBaseSide = 70;
 var triangleSide = 100;
+triangleSide = (( triangleSide * 2 ) > triangleBaseSide ) ? triangleSide : ( triangleBaseSide / 2 + 1 );
 
 var documentCoordinates = {
     centerDocumentPositionX: ( window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth ) / 2,
